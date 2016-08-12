@@ -1,0 +1,155 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>ghc by quietshu</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>ghc</h1>
+        <p>Navigate a repo in CLI with lazy clone. </p>
+
+        <p class="view"><a href="https://github.com/quietshu/ghc">View the Project on GitHub <small>quietshu/ghc</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/quietshu/ghc/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/quietshu/ghc/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/quietshu/ghc">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="ghc" class="anchor" href="#ghc" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>ghc</h1>
+
+<p>Lazy GitHub clone: navigate files in CLI without a clone (tested in macOS). </p>
+
+<p>I use GitHub a lot and found it painful to browser files (on the web app) and also it's very slow to clone big repos. What I really want is just <em>only download files I need</em>. Octotree is a great extension for Chrome but I'd like to build a tool for CLI. </p>
+
+<p>Ghc is a 2-hour hack. So, if you think it useful and want to help improving, feel free to submit an issue / question / PR. Thanks! </p>
+
+<h2>
+<a id="install" class="anchor" href="#install" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Install</h2>
+
+<p>Please ensure you have nodejs &gt;= 6 and npm installed.</p>
+
+<p><code>$ npm i ghc -g</code></p>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h2>
+
+<h3>
+<a id="init--enter" class="anchor" href="#init--enter" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Init &amp; enter</h3>
+
+<p><code>$ ghc -i &lt;username&gt;/&lt;repository&gt;</code> (master as default branch)<br>
+<code>$ ghc -i &lt;username&gt;/&lt;repository&gt; -b &lt;branch&gt;</code></p>
+
+<p>which will open a customized ghc shell. The shell supports very basic output format, highlight, autocomplete and command history.</p>
+
+<h3>
+<a id="commands" class="anchor" href="#commands" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Commands</h3>
+
+<p><code>$ ls [path]</code><br>
+<code>$ cd &lt;path&gt;</code><br>
+<code>$ cat &lt;file&gt;</code>: download that file (and cat it)<br>
+<code>$ subl &lt;file&gt;</code>: download that file (and sublime it)<br>
+<code>$ atom &lt;file&gt;</code>: download that file (and atom it)  </p>
+
+<h3>
+<a id="exit" class="anchor" href="#exit" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Exit</h3>
+
+<p>Exit the ghc shell.</p>
+
+<p><code>$ exit</code></p>
+
+<h3>
+<a id="other" class="anchor" href="#other" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Other</h3>
+
+<p>Other instructions will fallback to execute in bash. i.e. <code>pwd</code>, <code>tree</code>, <code>clear</code>, etc.</p>
+
+<h2>
+<a id="demo" class="anchor" href="#demo" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Demo</h2>
+
+<div class="highlight highlight-source-shell"><pre><span class="pl-k">~</span>/temp
+❯ ghc -i torvalds/linux
+Initializing torvalds/linux#master...
+OK
+Initializing <span class="pl-k">local</span> cache...
+OK
+
+∆ torvalds/linux [master] 
+<span class="pl-k">&gt;</span> ls
+.cocciconfig             .get_maintainer.ignore   .gitignore               
+.mailmap                 COPYING                  CREDITS                  
+Documentation            Kbuild                   Kconfig                  
+MAINTAINERS              Makefile                 README                   
+REPORTING-BUGS           arch                     block                    
+...
+
+∆ torvalds/linux [master] 
+<span class="pl-k">&gt;</span> <span class="pl-c1">cd</span> kernel
+
+∆ torvalds/linux [master] kernel
+<span class="pl-k">&gt;</span> ls
+.gitignore               Kconfig.freezer          Kconfig.hz               
+Kconfig.locks            Kconfig.preempt          Makefile                 
+acct.c                   async.c                  audit.c                  
+audit.h                  audit_fsnotify.c         audit_tree.c             
+audit_watch.c            auditfilter.c            auditsc.c                
+...
+
+∆ torvalds/linux [master] kernel
+<span class="pl-k">&gt;</span> cat up.c
+/<span class="pl-k">*</span>
+ <span class="pl-k">*</span> Uniprocessor-only support functions.  The counterpart to kernel/smp.c
+ <span class="pl-k">*</span>/
+
+<span class="pl-c">#include &lt;linux/interrupt.h&gt;</span>
+<span class="pl-c">#include &lt;linux/kernel.h&gt;</span>
+<span class="pl-c">#include &lt;linux/export.h&gt;</span>
+<span class="pl-c">#include &lt;linux/smp.h&gt;</span>
+
+int smp_call_function_single(int cpu, void (<span class="pl-k">*</span>func) (void <span class="pl-k">*</span>info), void <span class="pl-k">*</span>info,
+        int <span class="pl-c1">wait</span>)
+{
+  unsigned long flags<span class="pl-k">;</span>
+...
+
+∆ torvalds/linux [master] kernel
+<span class="pl-k">&gt;</span> <span class="pl-c1">exit</span>
+
+<span class="pl-k">~</span>/temp
+❯ tree
+<span class="pl-c1">.</span>
+└── torvalds_linux_master_ghc
+    └── kernel
+        └── up.c
+
+2 directories, 1 file
+</pre></div>
+
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License</h2>
+
+<p>2016, Shu Ding, MIT licensed.</p>
+
+<p>&lt;3</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/quietshu">quietshu</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
