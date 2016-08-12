@@ -34,6 +34,67 @@ Exit the ghc shell.
 ### Other
 Other instructions will fallback to execute in bash. i.e. `pwd`, `tree`, `clear`, etc.
 
+## Demo
+```zsh
+~/temp
+❯ ghc -i torvalds/linux
+Initializing torvalds/linux#master...
+OK
+Initializing local cache...
+OK
+
+∆ torvalds/linux [master] 
+> ls
+.cocciconfig             .get_maintainer.ignore   .gitignore               
+.mailmap                 COPYING                  CREDITS                  
+Documentation            Kbuild                   Kconfig                  
+MAINTAINERS              Makefile                 README                   
+REPORTING-BUGS           arch                     block                    
+...
+
+∆ torvalds/linux [master] 
+> cd kernel
+
+∆ torvalds/linux [master] kernel
+> ls
+.gitignore               Kconfig.freezer          Kconfig.hz               
+Kconfig.locks            Kconfig.preempt          Makefile                 
+acct.c                   async.c                  audit.c                  
+audit.h                  audit_fsnotify.c         audit_tree.c             
+audit_watch.c            auditfilter.c            auditsc.c                
+...
+
+∆ torvalds/linux [master] kernel
+> cat up.c
+/*
+ * Uniprocessor-only support functions.  The counterpart to kernel/smp.c
+ */
+
+#include <linux/interrupt.h>
+#include <linux/kernel.h>
+#include <linux/export.h>
+#include <linux/smp.h>
+
+int smp_call_function_single(int cpu, void (*func) (void *info), void *info,
+        int wait)
+{
+  unsigned long flags;
+...
+
+∆ torvalds/linux [master] kernel
+> exit
+
+~/temp
+❯ tree
+.
+└── torvalds_linux_master_ghc
+    └── kernel
+        └── up.c
+
+2 directories, 1 file
+
+```
+
 ## License
 2016, Shu Ding, MIT licensed.
 
