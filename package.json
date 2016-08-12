@@ -1,0 +1,22 @@
+{
+  "name": "ghc",
+  "version": "0.0.",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "author": "Shu Ding <ds303077135@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:quietshu/ghc.git"
+  },
+  "dependencies": {
+    "atob": "^2.0.3",
+    "chalk": "^1.1.3",
+    "commander": "^2.9.0",
+    "shelljs": "^0.7.3"
+  },
+  "bin": {
+    "ghc": "index.js"
+  }
+}
