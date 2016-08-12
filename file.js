@@ -3,6 +3,7 @@ const path = require('path')
 
 const shell = require('shelljs')
 const chalk = require('chalk')
+const hljs = require('highlight-term.js')
 
 const api = require('./api')
 
@@ -30,7 +31,7 @@ const rightPad = (str, l) => str + ' '.repeat(l - str.length)
 
 // Tree array => big object
 const buildTree = files => {
-  let tree = {}
+  let tree = {[TYPE]: 'tree', [NAME]: ''}
   files.forEach(file => {
     let pointer = tree
     let route = file.path.split(path.sep)
@@ -138,6 +139,24 @@ const cd = cmd => {
     throw new Error('Error: cannot navigate out of the repo.')
   }
 
+  let repoPath = path.relative(root, cdPath)
+  let pointer = repoTree
+
+  repoPath
+    .split(path.sep)
+    .filter(p => p)
+    .forEach(name => {
+      if (pointer[name]) {
+        pointer = pointer[name]
+      } else {
+        throw new Error(`Error: file ${name} not found.`)
+      }
+    })
+
+  if (pointer[TYPE] !== 'tree') {
+    throw new Error(`Error: cannot cd into a non-directory.`)
+  }
+
   if (!fs.existsSync(cdPath)) {
     fs.mkdirSync(cdPath)
   }
@@ -203,7 +222,13 @@ const cat = (cmd, display = true) =>
 
     get(catPath, pointer[URL]).then(content => {
       if (display) {
-        process.stdout.write(content)
+        // Highlight
+        process.stdout.write(
+          hljs
+            .highlightAuto(content)
+            .value
+            .replace(/\t/g, '    ')
+        )
       }
       resolve({content, catPath})
     })

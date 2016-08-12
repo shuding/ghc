@@ -51,7 +51,7 @@ function start() {
   process.stdin.setRawMode(true)
 
   const highlight = str =>
-    str.replace(/^(cat|ls|cd|exit)(?=($| |\t))/, chalk.green('$1'))
+    str.replace(/^(cat|ls|cd|clear|pwd|exit)(?=($| |\t))/, chalk.green('$1'))
 
   const autocomplete = str =>
     file.autocomplete(str.split(' ').slice(-1)[0])
@@ -118,10 +118,11 @@ function start() {
       process.stdout.clearLine()
       process.stdout.cursorTo(0)
       process.stdout.write(chalk.red.bold('> '))
-      process.stdout.write(highlight(Buffer.concat(data).toString()))
       if (ch !== '\u0004' && ch !== '\n' && ch !== '\r') {
+        process.stdout.write(highlight(Buffer.concat(data).toString()))
         return
       }
+      process.stdout.write(highlight(Buffer.concat(data).toString().trim()))
     }
 
     process.stdin.pause()
