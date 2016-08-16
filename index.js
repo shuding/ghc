@@ -51,7 +51,7 @@ function start() {
   process.stdin.setRawMode(true)
 
   const highlight = str =>
-    str.replace(/^(cat|ls|cd|clear|pwd|exit)(?=($| |\t))/, chalk.green('$1'))
+    str.replace(/^(cat|ls|cd|clear|pwd|exit|rm|atom|subl|open)(?=($| |\t))/, chalk.green('$1'))
 
   const autocomplete = str =>
     file.autocomplete(str.split(' ').slice(-1)[0])
@@ -82,9 +82,9 @@ function start() {
       return
     } else if (ch == TAB) {
       let str = Buffer.concat(data).toString()
-      let complete = Buffer(autocomplete(str))
+      let complete = [].map.call(autocomplete(str), c => Buffer(c))
       if (complete) {
-        data.push(complete)
+        data = data.concat(complete)
         process.stdout.clearLine()
         process.stdout.cursorTo(0)
         process.stdout.write(chalk.red.bold('> '))
@@ -159,6 +159,13 @@ function start() {
           file.cat(text, false).then(({content, catPath}) => {
             // Data cached
             file.exec(`atom ${catPath}`)
+            waitForInput()
+          }).catch(waitForErr)
+          break
+        case /^open /.test(text):
+          file.cat(text, false).then(({content, catPath}) => {
+            // Data cached
+            file.exec(`open ${catPath}`)
             waitForInput()
           }).catch(waitForErr)
           break

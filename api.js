@@ -47,14 +47,33 @@ const content = url => {
     }
   }
 
+  let clearLine = () => {
+    process.stdout.clearLine()
+    process.stdout.cursorTo(0)
+  }
+
+  let showPercentage = (curr, tot) => {
+    clearLine()
+    process.stdout.write((curr / tot * 100.0).toFixed(2) + '%')
+  }
+
   return new Promise((resolve, reject) => {
     const body = []
+    let total, current
     https.get(options, res => {
+      total = res.headers['content-length']
+      current = 0
+
       res
-        .on('data', d => body.push(d))
-        .on('end', () =>
+        .on('data', d => {
+          body.push(d)
+          current += d.length
+          showPercentage(current, total)
+        })
+        .on('end', () => {
+          clearLine()
           resolve(atob(JSON.parse(Buffer.concat(body).toString()).content))
-        )
+        })
     })
   })
 }
